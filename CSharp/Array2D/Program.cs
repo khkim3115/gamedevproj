@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Numerics;
+using System.Runtime.Intrinsics.Arm;
 
 namespace Array2D
 {
@@ -10,6 +12,8 @@ namespace Array2D
 
             public void SetPos(int x, int y)
             {
+
+                map[_y, _x] = mapOrigin[_y, _x];  //이전위치 롤백
                 //this 키워드
                 //객체 자기자신 참조 키워드
                 this._x = x;
@@ -37,7 +41,7 @@ namespace Array2D
             public void MoveUp()
             {
                 //움직이면 맵의 경계를 벗어나는지 체크
-                if (_y <= map.GetLength(0) + 1)
+                if (_y >= map.GetLength(0) - 1)
                 {
                     return;
                 }
@@ -67,7 +71,7 @@ namespace Array2D
             public void MoveLeft()
             {
                 //움직이면 맵의 경계를 벗어나는지 체크
-                if (_x <= map.GetLength(1) + 1)
+                if (_x >= map.GetLength(1) - 1)
                 {
                     return;
                 }
@@ -99,14 +103,29 @@ namespace Array2D
             { 1, 1, 0, 0, 2}
         };
 
+        static int[,] mapOrigin = new int[5, 5]
+        {
+            { 0, 1, 1, 1, 1},
+            { 0, 1, 1, 1, 1},
+            { 0, 0, 0, 1, 1},
+            { 1, 1, 0, 1, 1},
+            { 1, 1, 0, 0, 2}
+        };
+
         static void Main(string[] args)
         {
             Player player1 = new Player();
             player1.SetPos(0, 0);
 
-            player1.MoveDown();
-            player1.MoveDown();
-            player1.MoveRight();
+            string userInput = string.Empty;
+            while (map[4, 4] != 5)
+            {
+                userInput = Console.ReadLine();
+                if (userInput == "L") player1.MoveLeft();
+                if (userInput == "R") player1.MoveRight();
+                if (userInput == "U") player1.MoveUp();
+                if (userInput == "D") player1.MoveDown();
+            }
 
             //Player player2 = new Player();
             //player2.SetPos(0, 1);
